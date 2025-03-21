@@ -10,7 +10,7 @@ class CardService {
     private val cards: List<Card> = generateCards()
 
     companion object {
-        const val WORDS_IN_CARD = 4;
+        private const val WORDS_IN_CARD = 4;
         var cardsAmount = words.size / WORDS_IN_CARD
     }
 
