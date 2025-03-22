@@ -17,6 +17,8 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.21.0"
 
     id("org.siouan.frontend-jdk11") version "6.0.0"
+
+    id("org.jetbrains.kotlin.plugin.serialization") version kotlinVersion apply false
 }
 
 val detektReportMerge by tasks.registering(io.gitlab.arturbosch.detekt.report.ReportMergeTask::class) {
@@ -82,6 +84,7 @@ configure(subprojects.filter { server in it.name || "utils" in it.name }) {
     apply {
         plugin("java")
         plugin("kotlin")
+        plugin("org.jetbrains.kotlin.plugin.serialization")
     }
 
     dependencies {
@@ -90,6 +93,7 @@ configure(subprojects.filter { server in it.name || "utils" in it.name }) {
         testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion")
         testImplementation("org.junit.jupiter:junit-jupiter-params:$junitJupiterVersion")
         testRuntimeOnly("org.junit.platform:junit-platform-console:1.9.0")
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
     }
 }
 
@@ -112,6 +116,7 @@ configure(subprojects.filter { server in it.name }) {
         implementation("org.springframework.boot:spring-boot-starter-web")
         implementation("org.jetbrains.kotlin:kotlin-reflect:1.7.10")
         implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.1")
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
     }
 
     tasks.named("processResources") {

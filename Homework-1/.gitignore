@@ -1,1 +1,6 @@
 node_modules/
+
+game_results.json
+last_assigned_ids.json
+teams.json
+used_words_and_cards.json
