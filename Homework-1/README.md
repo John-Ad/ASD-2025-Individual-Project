@@ -1,3 +1,13 @@
+# How to enable the optional save state feauture
+In order to enable the optional feature of saving teams and results for re-use when the app is restarted, the following argument is required when launching the app:
+ `--saveState=true`
+
+
+
+---
+---
+---
+
 [![Gradle Build](https://github.com/Belosnegova/Programming-in-Kotlin-homework-1/actions/workflows/gradle-build.yml/badge.svg)](https://github.com/Belosnegova/Programming-in-Kotlin-homework-1/actions/workflows/gradle-build.yml)
 [![Gradle Build With Detekt](https://github.com/Belosnegova/Programming-in-Kotlin-homework-1/actions/workflows/gradle-build-with-detekt.yml/badge.svg)](https://github.com/Belosnegova/Programming-in-Kotlin-homework-1/actions/workflows/gradle-build-with-detekt.yml)
 
