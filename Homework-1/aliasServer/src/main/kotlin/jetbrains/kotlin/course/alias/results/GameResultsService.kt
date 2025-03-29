@@ -4,19 +4,28 @@ import jetbrains.kotlin.course.alias.filestorage.FileStorageService
 import jetbrains.kotlin.course.alias.team.Team
 import jetbrains.kotlin.course.alias.team.TeamService
 import kotlinx.serialization.Serializable
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 typealias GameResult = List<Team>;
 
 @Service
-class GameResultsService(private val fileStorageService: FileStorageService) {
+class GameResultsService(
+    private val fileStorageService: FileStorageService,
+    @Value("\${saveState:false}") private val saveState: String
+) {
+
+    constructor() : this(FileStorageService(), "false")
+
     companion object {
         val gameHistory: MutableList<GameResult> = mutableListOf()
     }
 
     init {
-        if (gameHistory.isEmpty()) {
-            gameHistory.addAll(fileStorageService.loadGameResults())
+        if (saveState == "true") {
+            if (gameHistory.isEmpty()) {
+                gameHistory.addAll(fileStorageService.loadGameResults())
+            }
         }
     }
 
@@ -28,7 +37,9 @@ class GameResultsService(private val fileStorageService: FileStorageService) {
 
         gameHistory.add(result)
 
-        fileStorageService.saveGameResults(gameHistory)
+        if (saveState == "true") {
+            fileStorageService.saveGameResults(gameHistory)
+        }
     }
 
     fun getAllGameResults(): List<GameResult> = gameHistory.reversed()

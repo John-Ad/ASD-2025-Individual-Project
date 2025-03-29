@@ -3,18 +3,18 @@ package jetbrains.kotlin.course.alias.card
 import jetbrains.kotlin.course.alias.filestorage.FileStorageService
 import jetbrains.kotlin.course.alias.util.IdentifierFactory
 import jetbrains.kotlin.course.alias.util.words
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
-class CardService(private val fileStorageService: FileStorageService) {
-    private lateinit var identifierFactory: IdentifierFactory;
-    private lateinit var cards: List<Card>;
+class CardService(
+    private val fileStorageService: FileStorageService,
+    @Value("\${saveState:false}") private val saveState: String
+) {
+    private val identifierFactory: IdentifierFactory = IdentifierFactory(0);
+    private val cards: List<Card> = generateCards();
 
-    init {
-        val (lastSavedTeamId, lastSavedCardId) = fileStorageService.loadLastAssignedIds()
-        identifierFactory = IdentifierFactory(lastSavedCardId ?: 0);
-        cards = generateCards();
-    }
+    constructor() : this(FileStorageService(), "false")
 
     companion object {
         private const val WORDS_IN_CARD = 4;
@@ -22,7 +22,18 @@ class CardService(private val fileStorageService: FileStorageService) {
     }
 
     private fun generateCards(): List<Card> {
-        val (usedWords, usedCards) = fileStorageService.loadUsedWordsAndCards()
+        if (saveState == "true") {
+            val (lastSavedTeamId, lastSavedCardId) = fileStorageService.loadLastAssignedIds()
+            if (lastSavedCardId != null) {
+                identifierFactory.setCounter(lastSavedCardId + 1);
+            }
+        }
+
+        var (usedWords, usedCards) = fileStorageService.loadUsedWordsAndCards()
+        if (saveState == "false") {
+            usedWords = emptyList()
+            usedCards = emptyList()
+        }
 
         var returnData: List<Card> = emptyList()
 
